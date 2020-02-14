@@ -114,7 +114,7 @@ def print_current():
 def print_today():
     print("\nLet's see what the weather is like today on: ")
     print(date_list[0])
-    print("\nMax temperature: " + max_temp_list[0] + "C")
+    print("Max temperature: " + max_temp_list[0] + "C")
     print("Min temperature: " + min_temp_list[0] + "C")
     print("State: " + weather_state_list[0])
     print()
@@ -213,6 +213,8 @@ def choose_output():
                 for date_value, min_temp_value, max_temp_value, weather_state_value in forecast_values:
                     print("Date:", date_value, "Min temperature:", min_temp_value,
                           "Max temperature:", max_temp_value, "Weather state:", weather_state_value, sep="|")
+                prompt_restart()
+                user_input_done = True
 
             elif user_command == "help":
                 print()
@@ -239,8 +241,8 @@ starting_point()
 # TODO:
 #   - Work on help command
 #   - Add support for other cities
+#   - Add abbreviated names for weekdays back in
 #   - (more...)
-
 
 # needed later:
 #
@@ -251,23 +253,3 @@ starting_point()
 # formatted_day = datetime.datetime.strftime(parsed_day, "%a, %d %b")
 # print(formatted_day)
 
-# old code:
-#
-# for date, temp in zip(dates, temperatures):
-#     print(type(temperatures))
-#     print(date.get_text())
-#     print(temp.get_text())
-
-# (orange_date, white_date) = dates
-# all_dates = orange_date + white_date
-# print(all_dates)
-
-# this works fine:
-# for temp in temperatures:
-#     print(temp.get_text())
-
-# print(dates, temperatures)
-
-# print(today, rest_week)
-# date and temperature already found, need to find a way to work with it (without errors!)
-# ["swg-col-period swg-row", "swg-col-temperature swg-row"]
