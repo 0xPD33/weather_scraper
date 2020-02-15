@@ -21,10 +21,8 @@ current_overview = current_soup.find(class_=
                                      "[ pack__item one-third ph- ] [ bg--blue text--white desk-pv- relative ]"
                                      " [ lap-one-half lap-pr0 lap-pv- ] [ palm-block palm-one-whole ]")
 
-# find all weekend days
-weekends = calendar.find_all(class_="text--orange date")
-# find all weekdays
-weekdays = calendar.find_all(class_="text--white date")
+# find all dates
+dates = calendar.find_all(class_=re.compile("text--"))
 
 # find min temps
 min_temperatures = calendar.find_all(class_="temp-min")
@@ -37,26 +35,13 @@ weather_states = calendar.find_all(class_="weather-state")
 date_list = []
 
 
-def process_days():
-    # for each day in weekdays: add the text of day to list
-    for day in weekdays:
+def process_dates():
+    for day in dates:
         day = str(day.get_text())
-        # replace A-Z with re.sub, getting rid of "MO", "DI", etc.
-        day = re.sub("[A-Z]", "", day)
-        # get rid of whitespace
-        day = ''.join(day.split())
-        date_list.append(day)
-
-    # for each day in weekends: add the text of day to list
-    for day in weekends:
-        day = str(day.get_text())
-        day = re.sub("[A-Z]", "", day)
-        day = ''.join(day.split())
         date_list.append(day)
 
 
-process_days()
-date_list.sort()
+process_dates()
 
 min_temp_list = []
 max_temp_list = []
@@ -103,23 +88,6 @@ calc_time = ' '.join(time_when_calculated.split())
 current_weather = [current_temp, current_state, calc_time]
 current_weather_desc = ["Current temperature:", "Current state:", "Calculated:"]
 
-
-def print_current():
-    print()
-    for weather_desc, weather_value in zip(current_weather_desc, current_weather):
-        print(weather_desc, weather_value)
-    print()
-
-
-def print_today():
-    print("\nLet's see what the weather is like today on: ")
-    print(date_list[0])
-    print("Max temperature: " + max_temp_list[0] + "C")
-    print("Min temperature: " + min_temp_list[0] + "C")
-    print("State: " + weather_state_list[0])
-    print()
-
-
 forecast_dict = {
     'date': [],
     'min_temp': [],
@@ -138,8 +106,36 @@ def process_forecast():
     for weather_state in weather_state_list:
         forecast_dict['weather_state'].append(weather_state)
 
+    global forecast_values
+    forecast_values = zip(forecast_dict['date'], forecast_dict['min_temp'],
+                          forecast_dict['max_temp'], forecast_dict['weather_state'])
+
 
 process_forecast()
+
+
+def print_current():
+    print()
+    for weather_desc, weather_value in zip(current_weather_desc, current_weather):
+        print(weather_desc, weather_value)
+    print()
+
+
+def print_today():
+    print("\nLet's see what the weather is like today on: ")
+    print(date_list[0])
+    print("Max temperature: " + max_temp_list[0] + "C")
+    print("Min temperature: " + min_temp_list[0] + "C")
+    print("State: " + weather_state_list[0])
+    print()
+
+
+def print_forecast():
+    print("Let's see what the weather is like in Darmstadt for the next 16 days:")
+    for date_value, min_temp_value, max_temp_value, weather_state_value in forecast_values:
+        print("Date:", date_value, "Min temperature:", min_temp_value,
+              "Max temperature:", max_temp_value, "Weather state:", weather_state_value)
+
 
 user_input_done = False
 
@@ -167,18 +163,15 @@ def prompt_restart():
 
 
 def choose_output():
-    # commands = ("current", "today", "forecast", "commands", "help", "quit")
     commands = {
         'current': 'Prints out current temperature, weather state and the time it was calculated.',
         'today': 'Prints out the date, the minimal and maximal temperature, as well as the weather state of the day.',
         'forecast': 'Prints out a 16-day forecast with all dates and the corresponding temperatures and states.',
         'commands': 'Lists all commands currently available.',
-        'help': 'Seriously? The help command + the command you want help for shows this info string.',
+        'help': 'The help command shows all commands and this information you are looking at. '
+                'The help command + the command shows information about the command and usage.',
         'quit': 'Does exactly what it says. It quits/terminates the program.'
     }
-
-    # for command in commands.keys():
-    #    print(command.split(' '))
 
     global user_input_done
     while user_input_done is False:
@@ -186,19 +179,23 @@ def choose_output():
             user_command = str.lower(input("Enter command:\n"))
 
             if user_command not in commands.keys():
-                print("Not a valid command. Type 'commands' for a list of commands."
-                      "and 'help' + the command to get information about a specific command.")
+                print("Not a valid command. Type 'commands' for a list of commands"
+                      "and 'help' to get more information or 'help' "
+                      "+ the command to get information about a specific command.")
                 continue
+
             elif user_command == "current" in commands.keys():
                 print("Printing current weather data..")
                 print_current()
                 prompt_restart()
                 user_input_done = True
+
             elif user_command == "today" in commands.keys():
                 print("Printing weather data for today..")
                 print_today()
                 prompt_restart()
                 user_input_done = True
+
             elif user_command == "commands":
                 print("Available commands:")
                 for command in commands.keys():
@@ -206,22 +203,22 @@ def choose_output():
                         print(command, end=", ")
                     else:
                         print(command)
+
             elif user_command == "forecast":
-                forecast_values = zip(forecast_dict['date'], forecast_dict['min_temp'],
-                                      forecast_dict['max_temp'], forecast_dict['weather_state'])
-                print("Let's see what the weather is like in Darmstadt for the next 16 days:")
-                for date_value, min_temp_value, max_temp_value, weather_state_value in forecast_values:
-                    print("Date:", date_value, "Min temperature:", min_temp_value,
-                          "Max temperature:", max_temp_value, "Weather state:", weather_state_value, sep="|")
+                print_forecast()
                 prompt_restart()
                 user_input_done = True
 
             elif user_command == "help":
-                print()
+                for command in commands.items():
+                    print(command)
+
             elif user_command == "quit":
                 quit("\nQuitting program..")
+
             else:
                 break
+
         except ValueError:
             print("Value error in code. Check if everything is right, then try again.")
             continue
@@ -241,7 +238,7 @@ starting_point()
 # TODO:
 #   - Work on help command
 #   - Add support for other cities
-#   - Add abbreviated names for weekdays back in
+#   - do more reformatting of this slightly bad looking code
 #   - (more...)
 
 # needed later:
@@ -252,4 +249,27 @@ starting_point()
 # format days
 # formatted_day = datetime.datetime.strftime(parsed_day, "%a, %d %b")
 # print(formatted_day)
-
+#
+# old code:
+#
+# # find all weekend days
+# weekends = calendar.find_all(class_="text--orange date")
+# # find all weekdays
+# weekdays = calendar.find_all(class_="text--white date")
+#
+# def process_days():
+#     # for each day in weekdays: add the text of day to list
+#     for day in weekdays:
+#         day = str(day.get_text())
+#         # replace A-Z with re.sub, getting rid of "MO", "DI", etc.
+#         day = re.sub("[A-Z]", "", day)
+#         # get rid of whitespace
+#         day = ''.join(day.split())
+#         date_list.append(day)
+#
+#     # for each day in weekends: add the text of day to list
+#     for day in weekends:
+#         day = str(day.get_text())
+#         day = re.sub("[A-Z]", "", day)
+#         day = ''.join(day.split())
+#         date_list.append(day)
