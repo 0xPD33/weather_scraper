@@ -168,8 +168,7 @@ def choose_output():
         'today': 'Prints out the date, the minimal and maximal temperature, as well as the weather state of the day.',
         'forecast': 'Prints out a 16-day forecast with all dates and the corresponding temperatures and states.',
         'commands': 'Lists all commands currently available.',
-        'help': 'The help command shows all commands and this information you are looking at. '
-                'The help command + the command shows information about the command and usage.',
+        'help': 'The help command shows all available commands and this information you are looking at.',
         'quit': 'Does exactly what it says. It quits/terminates the program.'
     }
 
@@ -180,8 +179,7 @@ def choose_output():
 
             if user_command not in commands.keys():
                 print("Not a valid command. Type 'commands' for a list of commands"
-                      "and 'help' to get more information or 'help' "
-                      "+ the command to get information about a specific command.")
+                      " and 'help' to get more information")
                 continue
 
             elif user_command == "current" in commands.keys():
@@ -233,13 +231,11 @@ def starting_point():
     choose_output()
 
 
-starting_point()
+if __name__ == '__main__':
+    starting_point()
 
 # TODO:
-#   - Work on help command
-#   - Add support for other cities
-#   - do more reformatting of this slightly bad looking code
-#   - (more...)
+#   - Add support for other cities (might not be easily possible)
 
 # needed later:
 #
