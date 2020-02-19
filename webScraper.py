@@ -236,36 +236,4 @@ if __name__ == '__main__':
 
 # TODO:
 #   - Add support for other cities (might not be easily possible)
-
-# needed later:
-#
-# parse days
-# parsed_day = datetime.datetime.strptime(day, "%d.%m.")
-# print(parsed_day)
-# format days
-# formatted_day = datetime.datetime.strftime(parsed_day, "%a, %d %b")
-# print(formatted_day)
-#
-# old code:
-#
-# # find all weekend days
-# weekends = calendar.find_all(class_="text--orange date")
-# # find all weekdays
-# weekdays = calendar.find_all(class_="text--white date")
-#
-# def process_days():
-#     # for each day in weekdays: add the text of day to list
-#     for day in weekdays:
-#         day = str(day.get_text())
-#         # replace A-Z with re.sub, getting rid of "MO", "DI", etc.
-#         day = re.sub("[A-Z]", "", day)
-#         # get rid of whitespace
-#         day = ''.join(day.split())
-#         date_list.append(day)
-#
-#     # for each day in weekends: add the text of day to list
-#     for day in weekends:
-#         day = str(day.get_text())
-#         day = re.sub("[A-Z]", "", day)
-#         day = ''.join(day.split())
-#         date_list.append(day)
+#   - implement pandas (?)

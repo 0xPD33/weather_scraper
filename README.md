@@ -7,3 +7,6 @@ Probably not the best way to do it,
 but whatever (I'm still learning).
 
 Currently only supports the city Darmstadt.
+
+This thing will probably be rewritten with selenium webdriver
+and pandas soon.
